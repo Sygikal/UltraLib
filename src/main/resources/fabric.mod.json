@@ -1,0 +1,31 @@
+{
+    "schemaVersion": 1,
+    "id": "ultralib",
+    "version": "${version}",
+    "name": "UltraLib",
+    "description": "Java Code Library",
+    "authors": [
+        "Sygikal"
+    ],
+    "contact": {
+        "homepage": "https://fabricmc.net/",
+        "sources": "https://github.com/Sygikal/UltraLib"
+    },
+    "license": "CC0-1.0",
+    "icon": "assets/ultralib/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "dev.sygii.ultralib.UltraLib"
+        ]
+    },
+    "mixins": [
+        "ultralib.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.16.14",
+        "minecraft": "${mcdep}",
+        "java": "${javadep}",
+        "fabric-api": "*"
+    }
+}
