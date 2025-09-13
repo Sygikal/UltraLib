@@ -1,4 +1,4 @@
-package dev.sygii.ultralib.data.loader;
+package dev.sygii.ultralib.data.loader.resource;
 
 import com.google.gson.JsonObject;
 import net.minecraft.util.Identifier;
