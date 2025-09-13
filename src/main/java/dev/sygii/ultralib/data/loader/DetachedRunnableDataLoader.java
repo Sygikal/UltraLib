@@ -2,6 +2,7 @@ package dev.sygii.ultralib.data.loader;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dev.sygii.ultralib.data.loader.resource.RunnableResource;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
