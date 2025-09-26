@@ -26,24 +26,31 @@ public class SimpleDataLoader implements SimpleSynchronousResourceReloadListener
 
     @Override
     public void reload(ResourceManager manager) {
-        preReload();
-        manager.findResources(directory, id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
-            try {
-                InputStream stream = null;
-                stream = resourceRef.getInputStream();
-                JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
-                String fileName = id.getPath().replace(directory + "/", "").replace(".json", "");
-                reloadResource(data, id, fileName);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        postReload();
+        if (condition()) {
+            preReload();
+            manager.findResources(directory, id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
+                try {
+                    InputStream stream = null;
+                    stream = resourceRef.getInputStream();
+                    JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+                    String fileName = id.getPath().replace(directory + "/", "").replace(".json", "");
+                    Identifier resourceId = Identifier.of(id.getNamespace(), fileName);
+                    reloadResource(data, resourceId, fileName);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            postReload();
+        }
+    }
+
+    public boolean condition() {
+        return true;
     }
 
     public void preReload() {}
 
-    public void reloadResource(JsonObject data, Identifier id, String fileName) {}
+    public void reloadResource(JsonObject data, Identifier entryId, String fileName) {}
 
     public void postReload() {}
 }
