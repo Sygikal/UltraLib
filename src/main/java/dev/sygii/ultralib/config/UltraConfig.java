@@ -2,31 +2,40 @@ package dev.sygii.ultralib.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dev.sygii.ultralib.UltraLib;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UltraConfig<T> {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    public final List<Path> directories = new ArrayList<>();
     public final String configDir;
-    public final String[] dirs;
     public final Path configFile;
     public final Class<T> instance;
     public final T instance2;
+    public final String modid;
 
-    public UltraConfig(String modId, String[] dirs, Class<T> instance, T instance2) {
+    private T config;
+
+    public UltraConfig(String modId, Class<T> instance, T instance2) {
+        this.modid = modId;
         this.configDir = FabricLoader.getInstance().getConfigDir() + File.separator + modId + File.separator;
-        this.dirs = dirs;
         this.configFile = Path.of(configDir + instance.getName() + ".json");
         this.instance = instance;
         this.instance2 = instance2;
+        directories.add(Path.of(configDir));
     }
 
-    private T config;
+    public void addDirectory(String dir) {
+        this.directories.add(Path.of(configDir + dir + File.separator));
+    }
 
     public T getConfig() {
         return config;
@@ -34,15 +43,15 @@ public class UltraConfig<T> {
 
     public void init() {
         try {
-            for (String dir : dirs) {
-                Path path = Path.of(configDir + dir + File.separator);
+            directories.forEach(path -> {
                 if (!Files.exists(path)) {
-                    Files.createDirectory(path);
+                    try {
+                        Files.createDirectory(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-            }
-            /*if (!Files.exists(panoramaFile)) {
-                Files.write(panoramaFile, GSON.toJson(new Panorama()).getBytes());
-            }*/
+            });
             load();
             config = getConfig();
             onInit();
@@ -53,7 +62,9 @@ public class UltraConfig<T> {
             System.out.println(data);*/
             //String fileName = id.getPath().replace(directory + "/", "").replace(".json", "");
             //reloadResource(data, id, fileName);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            UltraLib.LOGGER.error("Initializing config for {}, {}", modid, e);
+        }
     }
 
     public void onInit() {
@@ -63,7 +74,6 @@ public class UltraConfig<T> {
     public void load() {
         if (!Files.exists(configFile)) {
             config = instance2;
-            save();
             return;
         }
         try {
@@ -72,15 +82,17 @@ public class UltraConfig<T> {
             if (data != null) {
                 config = data;
             }
-        } catch (IOException ignored) {
+            save();
+        } catch (IOException e) {
+            UltraLib.LOGGER.error("Loading config for {}, {}", modid, e);
         }
     }
 
     public void save() {
         try {
             Files.write(configFile, GSON.toJson(config).getBytes());
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            UltraLib.LOGGER.error("Saving config for {}, {}", modid, e);
         }
     }
 }
