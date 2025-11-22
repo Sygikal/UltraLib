@@ -13,7 +13,16 @@ import org.apache.commons.compress.utils.Lists;
 import java.io.IOException;
 import java.util.List;
 
+//? if >=1.21.9 {
+/*public abstract class ListDetachedRunnableDataLoader<T> extends SinglePreparationResourceReloader<List<T>> {
+*///?} else {
 public abstract class ListDetachedRunnableDataLoader<T> extends SinglePreparationResourceReloader<List<T>> implements IdentifiableResourceReloadListener {
+
+    @Override
+    public Identifier getFabricId() {
+        return loaderId;
+    }
+//?}
     private final Identifier loaderId;
     private final String directory;
     private final List<T> loaderList = Lists.newArrayList();
@@ -21,11 +30,6 @@ public abstract class ListDetachedRunnableDataLoader<T> extends SinglePreparatio
     public ListDetachedRunnableDataLoader(Identifier loaderId, String directory) {
         this.loaderId = loaderId;
         this.directory = directory;
-    }
-
-    @Override
-    public Identifier getFabricId() {
-        return loaderId;
     }
 
     public void runResources(ResourceManager manager, Profiler profiler, ReturnableResource<T> runnable) {

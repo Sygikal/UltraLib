@@ -6,12 +6,22 @@ import dev.sygii.ultralib.data.loader.resource.RunnableResource;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
+import net.minecraft.resource.SynchronousResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 
 import java.io.IOException;
 
+//? if >=1.21.9 {
+/*public abstract class RunnableDataLoader<T> extends SinglePreparationResourceReloader<T> {
+    *///?} else {
 public abstract class RunnableDataLoader<T> extends SinglePreparationResourceReloader<T> implements IdentifiableResourceReloadListener {
+
+    @Override
+    public Identifier getFabricId() {
+        return loaderId;
+    }
+//?}
     private final Identifier loaderId;
     private final String directory;
 
@@ -39,9 +49,4 @@ public abstract class RunnableDataLoader<T> extends SinglePreparationResourceRel
 
     @Override
     protected abstract void apply(T prepared, ResourceManager manager, Profiler profiler);
-
-    @Override
-    public Identifier getFabricId() {
-        return loaderId;
-    }
 }

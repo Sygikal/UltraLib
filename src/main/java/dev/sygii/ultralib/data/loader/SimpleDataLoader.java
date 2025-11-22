@@ -4,24 +4,29 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.SynchronousResourceReloader;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+//? if >=1.21.9 {
+/*public class SimpleDataLoader implements SynchronousResourceReloader {
+    *///?} else {
 public class SimpleDataLoader implements SimpleSynchronousResourceReloadListener {
+
+    @Override
+    public Identifier getFabricId() {
+        return loaderId;
+    }
+//?}
     private final Identifier loaderId;
     private final String directory;
 
     public SimpleDataLoader(Identifier loaderId, String directory) {
         this.loaderId = loaderId;
         this.directory = directory;
-    }
-
-    @Override
-    public Identifier getFabricId() {
-        return loaderId;
     }
 
     @Override

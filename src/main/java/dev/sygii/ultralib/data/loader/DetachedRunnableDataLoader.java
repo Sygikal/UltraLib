@@ -10,19 +10,22 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 
 import java.io.IOException;
-
+//? if >=1.21.9 {
+/*public abstract class DetachedRunnableDataLoader<T> extends SinglePreparationResourceReloader<T> {
+    *///?} else {
 public abstract class DetachedRunnableDataLoader<T> extends SinglePreparationResourceReloader<T> implements IdentifiableResourceReloadListener {
+
+    @Override
+    public Identifier getFabricId() {
+        return loaderId;
+    }
+//?}
     private final Identifier loaderId;
     private final String directory;
 
     public DetachedRunnableDataLoader(Identifier loaderId, String directory) {
         this.loaderId = loaderId;
         this.directory = directory;
-    }
-
-    @Override
-    public Identifier getFabricId() {
-        return loaderId;
     }
 
     public void runResources(ResourceManager manager, Profiler profiler, RunnableResource runnable) {
